@@ -5,7 +5,7 @@ export async function saveFeedbackRecord(record) {
     process.env.SUPABASE_SECRET_KEY ||
     '';
 
-  const supabaseTable = process.env.SUPABASE_TABLE || 'feedback_records';
+  const supabaseTable = process.env.SUPABASE_TABLE || 'efeedback_records';
 
   const missing = [];
 
