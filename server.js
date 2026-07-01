@@ -101,11 +101,7 @@ async function handleFeedback(req, res) {
   }
 
   const messages = buildMessages({ ...payload, materialCode, condition });
-  const evaluationResult = await generateEvaluation(messages, {
-    materialCode,
-    draft: payload.draft
-  });
-
+  const evaluationResult = await generateEvaluation(messages, { materialCode, draft: payload.draft });
   const displayedFeedback = renderFeedback(condition, evaluationResult.parsedJson);
   const recordId = makeRecordId(materialCode, payload.participantId);
 
@@ -164,9 +160,7 @@ async function serveStatic(req, res) {
 
   try {
     const content = await readFile(filePath);
-    res.writeHead(200, {
-      'Content-Type': mime[extname(filePath)] || 'application/octet-stream'
-    });
+    res.writeHead(200, { 'Content-Type': mime[extname(filePath)] || 'application/octet-stream' });
     res.end(content);
   } catch {
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
