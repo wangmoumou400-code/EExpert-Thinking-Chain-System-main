@@ -53,16 +53,29 @@ function qualityLines(evaluation) {
 function cmcLines(evaluation) {
   const demo = evaluation?.cmc_reasoning_demo || {};
 
-  return [
+  const newSchemaLines = [
+    demo.knowledge_activation,
+    demo.task_monitoring,
+    demo.quality_monitoring,
+    demo.control_decision,
+    demo.product_evaluation,
+    demo.score_control_summary
+  ].filter(Boolean);
+
+  if (newSchemaLines.length > 0) {
+    return newSchemaLines.join('\n\n');
+  }
+
+  const oldSchemaLines = [
     demo.evaluation_plan,
     demo.clarify_monitoring,
     demo.ideate_monitoring,
     demo.develop_monitoring,
     demo.implement_monitoring,
     demo.synthesis
-  ]
-    .filter(Boolean)
-    .join('\n\n');
+  ].filter(Boolean);
+
+  return oldSchemaLines.join('\n\n');
 }
 
 export function renderFeedback(condition, evaluation) {
