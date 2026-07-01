@@ -78,7 +78,7 @@ async function generateFeedback() {
     const mockText = data.mock ? '｜当前为未配置API的模拟输出' : '';
 
     el('meta').textContent =
-      `${data.conditionLabel}｜记录编号：${data.recordId}｜数据库保存：${saveText}${saveError}${mockText}`;
+      `反馈已生成｜记录编号：${data.recordId}｜数据库保存：${saveText}${saveError}${mockText}`;
 
     el('complete').disabled = false;
     startTimer();
@@ -117,7 +117,23 @@ async function copyFeedback() {
 async function completeReading() {
   if (!currentRecord || !feedbackOpenedAt) return;
 
-  const readingSeconds = Math.round((Date.now() - feedbackOpenedAt.getTime()) / 1000);
+  const completedAt = new Date();
+  const readingSeconds = Math.round((completedAt.getTime() - feedbackOpenedAt.getTime()) / 1000);
+
+  try {
+    await fetch('/api/reading-complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...currentRecord,
+        feedbackOpenedAt: feedbackOpenedAt.toISOString(),
+        completedAt: completedAt.toISOString(),
+        readingSeconds
+      })
+    });
+  } catch {
+    // 阅读完成记录不是反馈生成的必要条件，失败时不打断实验流程。
+  }
 
   stopTimer();
   el('complete').disabled = true;
