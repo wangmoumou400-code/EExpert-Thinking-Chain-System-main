@@ -46,40 +46,40 @@ function mockEvaluation() {
         stage: 'Clarify',
         stage_score: 2,
         evidence_from_draft: '方案呈现了目标用户和使用场景，但核心需求仍可更具体。',
-        evaluative_comment: '任务理解基本清楚，但用户痛点的边界还不够明确。'
+        evaluative_comment: '任务理解基本清楚，但用户痛点的边界还不够明确，因此澄清质量不能评为高水平。'
       },
       {
         stage: 'Ideate',
         stage_score: 2,
         evidence_from_draft: '方案提出了若干区别于普通毛绒玩具的功能方向。',
-        evaluative_comment: '创意有一定变化，但部分内容仍接近常见智能玩具功能组合。'
+        evaluative_comment: '创意有一定变化，但部分内容仍接近常见智能玩具或功能组合，原创性需要谨慎评分。'
       },
       {
         stage: 'Develop',
         stage_score: 2,
         evidence_from_draft: '方案说明了主要功能和价值，但互动机制与连续体验仍不充分。',
-        evaluative_comment: '方案方向可理解，原创性和具体性还需要更清楚的产品机制支撑。'
+        evaluative_comment: '方案方向可以理解，但还需要更清楚的产品机制来支撑原创性和具体性。'
       },
       {
         stage: 'Implement',
         stage_score: 1,
-        evidence_from_draft: '材料、供电、安全、清洗、成本或量产限制呈现较少。',
-        evaluative_comment: '实施计划相对薄弱，可行性证据不足。'
+        evidence_from_draft: '材料、供电、安全、清洁、成本或量产限制呈现较少。',
+        evaluative_comment: '实施计划相对薄弱，可行性证据不足，因此实施阶段评分较低。'
       }
     ],
     creative_quality: {
       originality: '方案具有一定新意，但原创性主要来自功能组合，独特机制尚不突出。',
-      usefulness: '方案能够回应用户陪伴或趣味体验需要，具有较明确的使用价值。',
+      usefulness: '方案能够回应用户陪伴、趣味或使用便利等需要，具有较明确的使用价值。',
       elaboration: '方案仍需要更具体地说明使用流程、关键部件和实现限制。'
     },
-    structured_overall_comment: '该方案有清楚的改进方向和一定实用价值，但创意机制和实施细节仍不够充分。',
+    structured_overall_comment: '该方案有清楚的改进方向和一定实用价值，但创意机制和实施细节仍不够充分，整体创造性保持在中等水平。',
     cmc_reasoning_demo: {
-      evaluation_plan: '当我评价这个方案时，我先问自己：它是否抓住了具体用户问题，是否区别于普通毛绒兔，是否形成完整体验，以及可行性限制是否影响评分。',
-      clarify_monitoring: '草稿呈现了目标用户和使用场景，这能支持基本实用性判断；但需求边界不够具体，限制了高分判断。',
-      ideate_monitoring: '草稿提出了若干功能变化，但如果这些变化主要是常见功能组合，原创性不能被抬得太高。',
-      develop_monitoring: '目前的功能方向可以理解，但还需要判断它们是否形成一个连贯产品体验，而不是并列堆叠。',
-      implement_monitoring: '材料、安全、清洁、供电或生产限制若没有充分交代，会压低具体性和实施阶段评分。',
-      synthesis: '因此，我会认可方案的基本方向和部分实用价值，但把整体分数控制在中等水平，主要扣分点是原创机制和可行性细节不足。'
+      knowledge_activation: '当我评价这个方案时，我先确认三个判断依据：它是否回应毛绒兔改进任务，是否同时具备原创性和实用性，以及是否被发展成足够具体的产品方案。',
+      task_monitoring: '我会先看草稿中呈现的目标用户、使用场景和核心需要，这些信息能够支持基本实用性判断，但若需求边界不清，就不能支撑高分。',
+      quality_monitoring: '我再检查具体功能是否只是常见毛绒玩具功能的并列组合，还是形成了新的互动机制、用户体验或产品类别转换。',
+      control_decision: '因此我不会因为功能数量较多就提高原创性评分，而会根据功能之间是否形成独特体验来控制评分。',
+      product_evaluation: '从当前产物看，方案已有可理解的方向，但原创机制、使用流程和实施约束没有完全展开。',
+      score_control_summary: '综合判断时，实用性可以相对高一些，原创性和具体性需要压低，整体创造性保持在中等水平。'
     }
   };
 }
@@ -90,7 +90,7 @@ export async function generateEvaluation(messages, context = {}) {
   const model = env('AI_MODEL', '__MODEL_TO_BE_SELECTED__');
 
   if (!isConfigured(apiUrl) || !isConfigured(apiKey) || !isConfigured(model)) {
-    const parsedJson = mockEvaluation(context.materialCode);
+    const parsedJson = mockEvaluation(context);
     return {
       mock: true,
       model,
