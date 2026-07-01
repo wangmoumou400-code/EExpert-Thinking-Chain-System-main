@@ -24,7 +24,7 @@ const conditionMap = {
 const conditionLabel = {
   B: '结果性评分反馈',
   C: '常规结构化专家反馈',
-  D: '专家CMC思维链反馈'
+  D: '专家创造力元认知反馈'
 };
 
 const mime = {
@@ -76,7 +76,8 @@ async function readBody(req) {
     chunks.push(chunk);
   }
 
-  return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
+  const text = Buffer.concat(chunks).toString('utf8') || '{}';
+  return JSON.parse(text);
 }
 
 function normalizeMaterialCode(code) {
@@ -170,7 +171,7 @@ async function serveStatic(req, res) {
   const safePath = normalize(pathname).replace(/^([/\\])+/, '');
   const filePath = join(publicDir, safePath);
 
-  if (!filePath.startsWith(publicDir)) {
+  if (!normalize(filePath).startsWith(normalize(publicDir))) {
     res.writeHead(403);
     res.end('Forbidden');
     return;
