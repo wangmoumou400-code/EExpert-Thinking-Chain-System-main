@@ -36,7 +36,6 @@ const mime = {
 
 function loadEnvFile(filePath) {
   if (!existsSync(filePath)) return;
-
   const content = readFileSync(filePath, 'utf8');
 
   for (const rawLine of content.split(/\r?\n/)) {
@@ -56,9 +55,7 @@ function loadEnvFile(filePath) {
 }
 
 function sendJson(res, status, data) {
-  res.writeHead(status, {
-    'Content-Type': 'application/json; charset=utf-8'
-  });
+  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
   res.end(JSON.stringify(data));
 }
 
@@ -68,11 +65,9 @@ async function readBody(req) {
 
   for await (const chunk of req) {
     size += chunk.length;
-
     if (size > 1024 * 1024) {
       throw new Error('提交内容过大，请减少文本长度。');
     }
-
     chunks.push(chunk);
   }
 
@@ -96,25 +91,16 @@ async function handleFeedback(req, res) {
   const condition = conditionMap[materialCode];
 
   if (!condition) {
-    sendJson(res, 400, {
-      error: '本系统仅用于材料B、材料C、材料D。请检查材料编号。'
-    });
+    sendJson(res, 400, { error: '本系统仅用于材料B、材料C、材料D。请检查材料编号。' });
     return;
   }
 
   if (!String(payload.draft || '').trim()) {
-    sendJson(res, 400, {
-      error: '请粘贴反馈前CPS内容或反馈前完整方案。'
-    });
+    sendJson(res, 400, { error: '请粘贴反馈前CPS内容或反馈前完整方案。' });
     return;
   }
 
-  const messages = buildMessages({
-    ...payload,
-    materialCode,
-    condition
-  });
-
+  const messages = buildMessages({ ...payload, materialCode, condition });
   const evaluationResult = await generateEvaluation(messages, {
     materialCode,
     draft: payload.draft
@@ -140,7 +126,6 @@ async function handleFeedback(req, res) {
       parsedJson: evaluationResult.parsedJson || null,
       mock: Boolean(evaluationResult.mock)
     });
-
     saved = Boolean(saveResult.saved);
   } catch (error) {
     saveError = error.message || String(error);
@@ -184,9 +169,7 @@ async function serveStatic(req, res) {
     });
     res.end(content);
   } catch {
-    res.writeHead(404, {
-      'Content-Type': 'text/plain; charset=utf-8'
-    });
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('Not found');
   }
 }
@@ -205,9 +188,7 @@ const server = http.createServer(async (req, res) => {
 
     await serveStatic(req, res);
   } catch (error) {
-    sendJson(res, 500, {
-      error: error.message || String(error)
-    });
+    sendJson(res, 500, { error: error.message || String(error) });
   }
 });
 
