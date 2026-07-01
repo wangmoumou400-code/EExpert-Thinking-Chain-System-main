@@ -1,19 +1,17 @@
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.SUPABASE_SECRET_KEY ||
+  '';
+
+const supabaseTable = process.env.SUPABASE_TABLE || 'feedback_records';
+
 export async function saveFeedbackRecord(record) {
-  const supabaseUrl = process.env.SUPABASE_URL || '';
-  const supabaseKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.SUPABASE_SECRET_KEY ||
-    '';
-
-  const supabaseTable = process.env.SUPABASE_TABLE || 'efeedback_records';
-
-  const missing = [];
-
-  if (!supabaseUrl) missing.push('SUPABASE_URL');
-  if (!supabaseKey) missing.push('SUPABASE_SERVICE_ROLE_KEY');
-
-  if (missing.length > 0) {
-    throw new Error(`Supabase环境变量缺失：${missing.join(', ')}`);
+  if (!supabaseUrl || !supabaseKey) {
+    return {
+      saved: false,
+      reason: 'Supabase环境变量未配置'
+    };
   }
 
   if (!supabaseUrl.startsWith('https://')) {
